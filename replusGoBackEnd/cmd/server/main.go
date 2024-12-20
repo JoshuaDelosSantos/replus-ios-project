@@ -12,6 +12,13 @@ func main() {
     // Load configuration settings
     cfg := config.LoadConfig()
 
+    // Initialize database
+    database, err := db.NewDB(cfg)
+    if err != nil {
+        log.Fatalf("Failed to initialize database: %v", err)
+    }
+    defer database.Close()
+
     // Print a message indicating the app is starting and on which port
     fmt.Printf("Starting app on port %s\n", cfg.AppPort)
 	
