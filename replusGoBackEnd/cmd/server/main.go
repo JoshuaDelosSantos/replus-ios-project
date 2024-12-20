@@ -1,12 +1,12 @@
 package main
 
 import (
-    "fmt"  // Package for formatted I/O
-    "log"  // Package for logging
-    "net/http"  // Package for HTTP client and server implementations
+	"fmt"      // Package for formatted I/O
+	"log"      // Package for logging
+	"net/http" // Package for HTTP client and server implementations
 
-	"github.com/JoshuaDelosSantos/replus-ios-project/replus-backend/internal/config"  // Custom package for configuration
-    "github.com/JoshuaDelosSantos/replus-ios-project/replus-backend/pkg/db" // Custom package for database operations
+	"github.com/JoshuaDelosSantos/replus-ios-project/replus-backend/internal/config" // Custom package for configuration
+	"github.com/JoshuaDelosSantos/replus-ios-project/replus-backend/pkg/db"          // Custom package for database operations
 )
 
 func main() {
