@@ -1,7 +1,6 @@
 package router
 
 import (
-    "net/http"
     "github.com/gorilla/mux"
     "github.com/JoshuaDelosSantos/replus-ios-project/replus-backend/internal/handlers"
 )
