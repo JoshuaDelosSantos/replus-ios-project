@@ -12,6 +12,13 @@ func HealthCheck(w http.ResponseWriter, r *http.Request) {
     })
 }
 
+// Home handles home requests
+func Home(w http.ResponseWriter, r *http.Request) {
+    json.NewEncoder(w).Encode(map[string]string{
+        "message": "Welcome to Replus API",
+    })
+}
+
 // GetUsers handles GET requests for users
 func GetUsers(w http.ResponseWriter, r *http.Request) {
     // TODO: Implement user retrieval
