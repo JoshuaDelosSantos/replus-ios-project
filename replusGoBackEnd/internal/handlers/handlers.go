@@ -1,3 +1,34 @@
+/*
+Package handlers implements HTTP request handlers for the Replus API.
+
+Endpoints:
+
+System:
+  - GET /health : Returns API health status
+  - GET /      : Returns welcome message
+
+Users:
+  - GET /api/v1/users  : Retrieves all users
+    Response: 200 OK with user list
+             500 Internal Server Error on failure
+
+  - POST /api/v1/users : Creates new user
+    Request: JSON user object
+    Response: 201 Created with new user
+             400 Bad Request if invalid data
+             500 Internal Server Error on failure
+
+Sessions:
+  - GET /api/v1/sessions  : Retrieves all sessions
+    Response: 200 OK with session list
+             500 Internal Server Error on failure
+
+  - POST /api/v1/sessions : Creates new session
+    Request: JSON session object
+    Response: 201 Created with new session
+             400 Bad Request if invalid data
+             500 Internal Server Error on failure
+*/
 package handlers
 
 import (
