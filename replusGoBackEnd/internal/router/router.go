@@ -8,6 +8,9 @@ import (
 func NewRouter() *mux.Router {
     r := mux.NewRouter()
     
+    // Root route
+    r.HandleFunc("/", handlers.Home).Methods("GET")
+    
     // Health check endpoint
     r.HandleFunc("/health", handlers.HealthCheck).Methods("GET")
     
