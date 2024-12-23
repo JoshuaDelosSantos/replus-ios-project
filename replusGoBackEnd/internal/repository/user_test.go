@@ -26,28 +26,33 @@ func setupMockDB(t *testing.T) (UserRepository, sqlmock.Sqlmock) {
 func TestGetUsers(t *testing.T) {
     log.Println("Starting TestGetUsers...")
 
-    // Step 1: Initialize mock DB and repository
+    // Initialize mock DB and repository
     log.Println("Initializing mock DB and repository...")
     repo, mock := setupMockDB(t)
 
-    // Step 2: Set up mock expectations
+    // Set up mock expectations
     log.Println("Setting up mock expectations...")
-    mock.ExpectQuery(`SELECT user_id, user_name FROM users ORDER BY user_id`).
+    mock.ExpectQuery(`
+		SELECT user_id, user_name 
+		FROM users 
+		ORDER BY user_id
+		`).
         WillReturnRows(sqlmock.NewRows([]string{"user_id", "user_name"}).
             AddRow(1, "John Doe").
             AddRow(2, "Jane Smith"))
 
     log.Println("Mock expectations set up successfully.")
 
-    // Step 3: Call the method being tested
+    // Call the method being tested
     log.Println("Calling the GetUsers method...")
     users, err := repo.GetUsers()
     assert.NoError(t, err)
 
     log.Println("GetUsers method executed successfully.")
 
-    // Step 4: Verify results
+    // Verify results
     log.Println("Verifying results...")
+	log.Println(users)
     expected := []models.User{
         {ID: 1, UserName: "John Doe"},
         {ID: 2, UserName: "Jane Smith"},
@@ -56,9 +61,50 @@ func TestGetUsers(t *testing.T) {
 
     log.Println("Results verified successfully.")
 
-    // Step 5: Ensure all expectations were met
+    // Ensure all expectations were met
     log.Println("Ensuring all mock expectations were met...")
     assert.NoError(t, mock.ExpectationsWereMet())
 
     log.Println("TestGetUsers completed successfully.")
+}
+
+func TestCreateUser(t *testing.T) {
+	log.Println("Starting TestCreateUser...")
+
+	// Initialize mock DB and repository
+	log.Println("Initializing mock DB and repository...")
+	repo, mock := setupMockDB(t)
+
+	// Set up mock expectations
+	log.Println("Setting up mock expectations...")
+	mock.ExpectQuery(`
+		INSERT INTO users \(user_name\) 
+		VALUES \(\$1\) 
+		RETURNING user_id
+		`).
+		WithArgs("John Doe").
+		WillReturnRows(sqlmock.NewRows([]string{"user_id"}).AddRow(1))
+
+	log.Println("Mock expectations set up successfully.")
+
+	// Call the method being tested
+	log.Println("Calling the CreateUser method...")
+	user := models.User{UserName: "John Doe"}
+	createdUser, err := repo.CreateUser(user)
+	assert.NoError(t, err)
+
+	log.Println("CreateUser method executed successfully.")
+
+	// Verify results
+	log.Println("Verifying results...")
+	expected := models.User{ID: 1, UserName: "John Doe"}
+	assert.Equal(t, expected, createdUser)
+
+	log.Println("Results verified successfully.")
+
+	// Ensure all expectations were met
+	log.Println("Ensuring all mock expectations were met...")
+	assert.NoError(t, mock.ExpectationsWereMet())
+
+	log.Println("TestCreateUser completed successfully.")
 }
