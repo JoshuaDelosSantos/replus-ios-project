@@ -142,3 +142,35 @@ func TestUpdateUser(t *testing.T) {
 
 	log.Println("TestUpdateUser completed successfully.")
 }
+
+func TestDeleteUser(t *testing.T) {
+	log.Println("Starting TestDeleteUser...")
+
+	// Initialize mock DB and repository
+	log.Println("Initializing mock DB and repository...")
+	repo, mock := setupMockDB(t)
+
+	// Set up mock expectations
+	log.Println("Setting up mock expectations...")
+	mock.ExpectExec(`
+		DELETE FROM users 
+		WHERE user_id = \$1
+		`).
+		WithArgs(1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	log.Println("Mock expectations set up successfully.")
+
+	// Call the method being tested
+	log.Println("Calling the DeleteUser method...")
+	err := repo.DeleteUser(1)
+	assert.NoError(t, err)
+
+	log.Println("DeleteUser method executed successfully.")
+
+	// Ensure all expectations were met
+	log.Println("Ensuring all mock expectations were met...")
+	assert.NoError(t, mock.ExpectationsWereMet())
+
+	log.Println("TestDeleteUser completed successfully.")
+}
