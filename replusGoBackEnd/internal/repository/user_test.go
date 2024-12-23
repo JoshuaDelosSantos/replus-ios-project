@@ -108,3 +108,37 @@ func TestCreateUser(t *testing.T) {
 
 	log.Println("TestCreateUser completed successfully.")
 }
+
+func TestUpdateUser(t *testing.T) {
+	log.Println("Starting TestUpdateUser...")
+
+	// Initialize mock DB and repository
+	log.Println("Initializing mock DB and repository...")
+	repo, mock := setupMockDB(t)
+
+	// Set up mock expectations
+	log.Println("Setting up mock expectations...")
+	mock.ExpectExec(`
+		UPDATE users 
+		SET user_name = \$1 
+		WHERE user_id = \$2
+		`).
+		WithArgs("Jane Smith", 2).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	log.Println("Mock expectations set up successfully.")
+
+	// Call the method being tested
+	log.Println("Calling the UpdateUser method...")
+	user := models.User{ID: 2, UserName: "Jane Smith"}
+	err := repo.UpdateUser(user)
+	assert.NoError(t, err)
+
+	log.Println("UpdateUser method executed successfully.")
+
+	// Ensure all expectations were met
+	log.Println("Ensuring all mock expectations were met...")
+	assert.NoError(t, mock.ExpectationsWereMet())
+
+	log.Println("TestUpdateUser completed successfully.")
+}
