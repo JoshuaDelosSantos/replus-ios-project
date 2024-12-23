@@ -13,6 +13,8 @@ import (
 type UserRepository interface {
     GetUsers() ([]models.User, error)
     CreateUser(user models.User) (models.User, error)
+    UpdateUser(user models.User) error
+    DeleteUser(userID int) error
 }
 
 // userRepo implements UserRepository interface.
@@ -67,4 +69,47 @@ func (r *userRepo) CreateUser(user models.User) (models.User, error) {
     }
     
     return user, nil
+}
+
+// UpdateUser updates an existing user in the database
+func (r *userRepo) UpdateUser(user models.User) error {
+    query := `
+        UPDATE users 
+        SET user_name = $1
+        WHERE user_id = $2`
+    
+    result, err := r.db.Exec(query, user.UserName, user.ID)
+    if err != nil {
+        return fmt.Errorf("error updating user: %v", err)
+    }
+
+    rows, err := result.RowsAffected()
+    if err != nil {
+        return fmt.Errorf("error checking update result: %v", err)
+    }
+    if rows == 0 {
+        return fmt.Errorf("user with ID %d not found", user.ID)
+    }
+
+    return nil
+}
+
+// DeleteUser removes a user from the database by ID
+func (r *userRepo) DeleteUser(userID int) error {
+    query := `DELETE FROM users WHERE user_id = $1`
+    
+    result, err := r.db.Exec(query, userID)
+    if err != nil {
+        return fmt.Errorf("error deleting user: %v", err)
+    }
+
+    rows, err := result.RowsAffected()
+    if err != nil {
+        return fmt.Errorf("error checking delete result: %v", err)
+    }
+    if rows == 0 {
+        return fmt.Errorf("user with ID %d not found", userID)
+    }
+
+    return nil
 }
