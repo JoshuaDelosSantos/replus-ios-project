@@ -3,7 +3,6 @@
 package repository
 
 import (
-    "database/sql"
     "github.com/JoshuaDelosSantos/replus-ios-project/replus-backend/internal/models"
     "fmt"
 )
@@ -20,12 +19,12 @@ type UserRepository interface {
 // userRepo implements UserRepository interface.
 // It holds a database connection to perform operations.
 type userRepo struct {
-    db *sql.DB // Dependency injection: db connection is passed from outside
+    db DB // Dependency injection: db connection is passed from outside
 }
 
 // NewUserRepository creates a new UserRepository instance.
 // This is a constructor function following factory pattern in Go.
-func NewUserRepository(db *sql.DB) UserRepository {
+func NewUserRepository(db DB) UserRepository {
     return &userRepo{db: db} // Returns interface, hides concrete implementation
 }
 
