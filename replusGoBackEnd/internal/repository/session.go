@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/JoshuaDelosSantos/replus-ios-project/replus-backend/internal/models"
 )
@@ -15,11 +14,11 @@ type SessionRepository interface {
 
 // sessionRepo implements SessionRepository interface.
 type sessionRepo struct {
-	db *sql.DB
+	db DB
 }
 
 // NewSessionRepository creates a new SessionRepository instance.
-func NewSessionRepository(db *sql.DB) SessionRepository {
+func NewSessionRepository(db DB) SessionRepository {
 	return &sessionRepo{db: db}
 }
 
