@@ -32,7 +32,11 @@ func NewUserRepository(db DB) UserRepository {
 // Returns a slice of User models and error if any.
 func (r *userRepo) GetUsers() ([]models.User, error) {
     // Execute SQL query and handle potential errors
-    rows, err := r.db.Query("SELECT user_id, user_name FROM users")
+    rows, err := r.db.Query(`
+        SELECT user_id, user_name 
+        FROM users
+        ORDER BY user_id
+        `)
     if (err != nil) {
         return nil, fmt.Errorf("error querying users: %v", err)
     }
