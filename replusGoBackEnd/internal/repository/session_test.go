@@ -180,3 +180,73 @@ func TestCreateSession(t *testing.T) {
 
 	log.Println("TestCreateSession completed successfully.")
 }
+
+func TestUpdateSession(t *testing.T) {
+	log.Println("Starting TestUpdateSession...")
+
+	// Initialize mock DB and repository
+	log.Println("Initializing mock DB and repository...")
+	repo, mock := setupMockSessionDB(t)
+
+	// Set up mock expectations
+	log.Println("Setting up mock expectations...")
+	mock.ExpectExec(`
+		UPDATE sessions 
+		SET session_name = \$1
+		WHERE session_id = \$2
+		`).
+		WithArgs("Updated Session", 1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	log.Println("Mock expectations set up successfully.")
+
+	// Call the method being tested
+	log.Println("Calling the UpdateSession method...")
+	session := models.Session{ID: 1, SessionName: "Updated Session"}
+	err := repo.UpdateSession(session)
+	assert.NoError(t, err)
+
+	log.Println("UpdateSession method executed successfully.")
+
+	// Verify results
+	log.Println("Verifying results...")
+
+	// Add test for a query error
+	log.Println("Testing query error handling...")
+	mock.ExpectExec(`
+		UPDATE sessions 
+		SET session_name = \$1
+		WHERE session_id = \$2
+		`).
+		WithArgs("Updated Session", 2).
+		WillReturnError(fmt.Errorf("query error"))
+
+	err = repo.UpdateSession(models.Session{ID: 2, SessionName: "Updated Session"})
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "query error")
+
+	log.Println("Query error handling test passed.")
+
+	// Add test for a result error
+	log.Println("Testing result error handling...")
+	mock.ExpectExec(`
+		UPDATE sessions 
+		SET session_name = \$1
+		WHERE session_id = \$2
+		`).
+		WithArgs("Updated Session", 3).
+		WillReturnResult(sqlmock.NewErrorResult(fmt.Errorf("result error")))
+
+	err = repo.UpdateSession(models.Session{ID: 3, SessionName: "Updated Session"})
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "error checking update result")
+
+	log.Println("Result error handling test passed.")
+
+	// Ensure all expectations were met
+	log.Println("Ensuring all mock expectations were met...")
+	assert.NoError(t, mock.ExpectationsWereMet())
+
+	log.Println("TestUpdateSession completed successfully.")
+}
+
