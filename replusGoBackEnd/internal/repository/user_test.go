@@ -5,18 +5,14 @@ import (
     "testing"
 
     "github.com/JoshuaDelosSantos/replus-ios-project/replus-backend/internal/models"
+	"github.com/JoshuaDelosSantos/replus-ios-project/replus-backend/internal/testutil"
     "github.com/stretchr/testify/assert"
     "github.com/DATA-DOG/go-sqlmock"
 )
 
 // setupMockDB creates a new sqlmock instance and returns the repository and mock.
-func setupMockDB(t *testing.T) (UserRepository, sqlmock.Sqlmock) {
-    log.Println("Setting up mock DB and repository...")
-    db, mock, err := sqlmock.New()
-    if err != nil {
-        t.Fatalf("Error creating mock DB: %v", err)
-    }
-
+func setupMockUserDB(t *testing.T) (UserRepository, sqlmock.Sqlmock) {
+    db, mock := testutil.NewMockDB(t)
     // Use the constructor for consistency
     log.Println("Mock DB and repository setup complete.")
     repo := NewUserRepository(db)
@@ -28,7 +24,7 @@ func TestGetUsers(t *testing.T) {
 
     // Initialize mock DB and repository
     log.Println("Initializing mock DB and repository...")
-    repo, mock := setupMockDB(t)
+    repo, mock := setupMockUserDB(t)
 
     // Set up mock expectations
     log.Println("Setting up mock expectations...")
@@ -73,7 +69,7 @@ func TestCreateUser(t *testing.T) {
 
 	// Initialize mock DB and repository
 	log.Println("Initializing mock DB and repository...")
-	repo, mock := setupMockDB(t)
+	repo, mock := setupMockUserDB(t)
 
 	// Set up mock expectations
 	log.Println("Setting up mock expectations...")
@@ -114,7 +110,7 @@ func TestUpdateUser(t *testing.T) {
 
 	// Initialize mock DB and repository
 	log.Println("Initializing mock DB and repository...")
-	repo, mock := setupMockDB(t)
+	repo, mock := setupMockUserDB(t)
 
 	// Set up mock expectations
 	log.Println("Setting up mock expectations...")
@@ -148,7 +144,7 @@ func TestDeleteUser(t *testing.T) {
 
 	// Initialize mock DB and repository
 	log.Println("Initializing mock DB and repository...")
-	repo, mock := setupMockDB(t)
+	repo, mock := setupMockUserDB(t)
 
 	// Set up mock expectations
 	log.Println("Setting up mock expectations...")
