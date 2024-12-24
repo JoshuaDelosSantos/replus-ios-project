@@ -45,7 +45,10 @@ func (r *sessionRepo) GetSessions() ([]models.Session, error) {
 
 // GetSessionsByUserID retrieves all sessions for a specific user
 func (r *sessionRepo) GetSessionsByUserID(userID int) ([]models.Session, error) {
-    rows, err := r.db.Query("SELECT session_id, user_id, session_name FROM sessions WHERE user_id = $1", userID)
+    rows, err := r.db.Query(`
+        SELECT session_id, user_id, session_name 
+        FROM sessions 
+        WHERE user_id = $1`, userID)
     if err != nil {
         return nil, fmt.Errorf("error querying sessions for user %d: %v", userID, err)
     }
