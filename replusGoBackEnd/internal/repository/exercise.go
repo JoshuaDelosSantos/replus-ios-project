@@ -15,3 +15,8 @@ type ExerciseRepository interface {
 	DeleteExercise(exerciseID int) error
 }
 
+// exerciseRepo implements ExerciseRepository interface.
+type exerciseRepo struct {
+	db DB
+}
+
