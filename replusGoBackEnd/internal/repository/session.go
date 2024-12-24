@@ -10,6 +10,8 @@ type SessionRepository interface {
 	GetSessions() ([]models.Session, error)
 	CreateSession(session models.Session) (models.Session, error)
 	GetSessionsByUserID(userID int) ([]models.Session, error)
+    UpdateSession(session models.Session) error
+    DeleteSession(sessionID int) error
 }
 
 // sessionRepo implements SessionRepository interface.
