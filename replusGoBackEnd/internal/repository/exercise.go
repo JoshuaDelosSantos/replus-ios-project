@@ -67,3 +67,18 @@ func (r *exerciseRepo) GetExercisesBySessionID(sessionID int) ([]models.Exercise
 	}
 	return exercises, nil
 }
+
+// CreateExercise inserts a new exercise into the database.
+func (r *exerciseRepo) CreateExercise(exercise models.Exercise) (models.Exercise, error) {
+	query := `
+		INSERT INTO exercises (session_id, exercise_name)
+		VALUES ($1, $2)
+		RETURNING exercise_id`
+
+	err := r.db.QueryRow(query, exercise.SessionID, exercise.ExerciseName).Scan(&exercise.ID)
+	if err != nil {
+		return models.Exercise{}, fmt.Errorf("error creating exercise: %v", err)
+	}
+
+	return exercise, nil
+}
