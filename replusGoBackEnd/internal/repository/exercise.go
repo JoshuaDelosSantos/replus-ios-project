@@ -82,3 +82,25 @@ func (r *exerciseRepo) CreateExercise(exercise models.Exercise) (models.Exercise
 
 	return exercise, nil
 }
+
+// UpdateExercise updates an existing exercise in the database.
+func (r *exerciseRepo) UpdateExercise(exercise models.Exercise) error {
+	query := `
+		UPDATE exercises 
+		SET exercise_name = $1
+		WHERE exercise_id = $2`
+	
+	result, err := r.db.Exec(query, exercise.ExerciseName, exercise.ID)
+	if err != nil {
+		return fmt.Errorf("error updating exercise: %v", err)
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error checking update result: %v", err)
+	}
+	if rows == 0 {
+		return fmt.Errorf("exercise with ID %d not found", exercise.ID)
+	}
+	return nil
+}
