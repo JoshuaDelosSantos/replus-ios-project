@@ -25,7 +25,7 @@ func NewExerciseRepository(db DB) ExerciseRepository {
 	return &exerciseRepo{db: db}
 }
 
-
+// GetExercises retrieves all exercises from the database
 func (r *exerciseRepo) GetExercises() ([]models.Exercise, error) {
 	rows, err := r.db.Query(`
 		SELECT exercise_id, session_id, exercise_name 
@@ -46,3 +46,24 @@ func (r *exerciseRepo) GetExercises() ([]models.Exercise, error) {
 	return exercises, nil
 }
 
+// GetExercisesBySessionID retrieves all exercises for a specific session
+func (r *exerciseRepo) GetExercisesBySessionID(sessionID int) ([]models.Exercise, error) {
+	rows, err := r.db.Query(`
+		SELECT exercise_id, session_id, exercise_name 
+		FROM exercises 
+		WHERE session_id = $1`, sessionID)
+	if err != nil {
+		return nil, fmt.Errorf("error querying exercises for session %d: %v", sessionID, err)
+	}
+	defer rows.Close()
+
+	var exercises []models.Exercise
+	for rows.Next() {
+		var exercise models.Exercise
+		if err := rows.Scan(&exercise.ID, &exercise.SessionID, &exercise.ExerciseName); err != nil {
+			return nil, fmt.Errorf("error scanning exercise: %v", err)
+		}
+		exercises = append(exercises, exercise)
+	}
+	return exercises, nil
+}
