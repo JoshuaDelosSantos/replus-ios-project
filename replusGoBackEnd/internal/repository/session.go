@@ -24,7 +24,9 @@ func NewSessionRepository(db DB) SessionRepository {
 
 // GetSessions retrieves all sessions from the database
 func (r *sessionRepo) GetSessions() ([]models.Session, error) {
-    rows, err := r.db.Query("SELECT session_id, user_id, session_name FROM sessions")
+    rows, err := r.db.Query(`
+        SELECT session_id, user_id, session_name 
+        FROM sessions`)
     if err != nil {
         return nil, fmt.Errorf("error querying sessions: %v", err)
     }
