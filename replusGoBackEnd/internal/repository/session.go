@@ -79,3 +79,25 @@ func (r *sessionRepo) CreateSession(session models.Session) (models.Session, err
     
     return session, nil
 }
+
+// UpdateSession updates an existing session in the database
+func (r *sessionRepo) UpdateSession(session models.Session) error {
+    query := `
+        UPDATE sessions 
+        SET session_name = $1
+        WHERE session_id = $2`
+    
+    result, err := r.db.Exec(query, session.SessionName, session.ID)
+    if err != nil {
+        return fmt.Errorf("error updating session: %v", err)
+    }
+
+    rows, err := result.RowsAffected()
+    if err != nil {
+        return fmt.Errorf("error checking update result: %v", err)
+    }
+    if rows == 0 {
+        return fmt.Errorf("session with ID %d not found", session.ID)
+    }
+    return nil
+}
