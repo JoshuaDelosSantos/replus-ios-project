@@ -250,3 +250,67 @@ func TestUpdateSession(t *testing.T) {
 	log.Println("TestUpdateSession completed successfully.")
 }
 
+func TestDeleteSession(t *testing.T) {
+	log.Println("Starting TestDeleteSession...")
+
+	// Initialize mock DB and repository
+	log.Println("Initializing mock DB and repository...")
+	repo, mock := setupMockSessionDB(t)
+
+	// Set up mock expectations
+	log.Println("Setting up mock expectations...")
+	mock.ExpectExec(`
+		DELETE FROM sessions 
+		WHERE session_id = \$1
+		`).
+		WithArgs(1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	log.Println("Mock expectations set up successfully.")
+
+	// Call the method being tested
+	log.Println("Calling the DeleteSession method...")
+	err := repo.DeleteSession(1)
+	assert.NoError(t, err)
+
+	log.Println("DeleteSession method executed successfully.")
+
+	// Verify results
+	log.Println("Verifying results...")
+
+	// Add test for a query error
+	log.Println("Testing query error handling...")
+	mock.ExpectExec(`
+		DELETE FROM sessions 
+		WHERE session_id = \$1
+		`).
+		WithArgs(2).
+		WillReturnError(fmt.Errorf("query error"))
+
+	err = repo.DeleteSession(2)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "query error")
+
+	log.Println("Query error handling test passed.")
+
+	// Add test for a result error
+	log.Println("Testing result error handling...")
+	mock.ExpectExec(`
+		DELETE FROM sessions 
+		WHERE session_id = \$1
+		`).
+		WithArgs(3).
+		WillReturnResult(sqlmock.NewErrorResult(fmt.Errorf("result error")))
+
+	err = repo.DeleteSession(3)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "error checking delete result")
+
+	log.Println("Result error handling test passed.")
+
+	// Ensure all expectations were met
+	log.Println("Ensuring all mock expectations were met...")
+	assert.NoError(t, mock.ExpectationsWereMet())
+
+	log.Println("TestDeleteSession completed successfully.")
+}
