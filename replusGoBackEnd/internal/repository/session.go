@@ -101,3 +101,22 @@ func (r *sessionRepo) UpdateSession(session models.Session) error {
     }
     return nil
 }
+
+// DeleteSession removes a session from the database by ID
+func (r *sessionRepo) DeleteSession(sessionID int) error {
+    query := `DELETE FROM sessions WHERE session_id = $1`
+    
+    result, err := r.db.Exec(query, sessionID)
+    if err != nil {
+        return fmt.Errorf("error deleting session: %v", err)
+    }
+
+    rows, err := result.RowsAffected()
+    if err != nil {
+        return fmt.Errorf("error checking delete result: %v", err)
+    }
+    if rows == 0 {
+        return fmt.Errorf("session with ID %d not found", sessionID)
+    }
+    return nil
+}
