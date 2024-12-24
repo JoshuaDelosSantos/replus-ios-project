@@ -104,3 +104,22 @@ func (r *exerciseRepo) UpdateExercise(exercise models.Exercise) error {
 	}
 	return nil
 }
+
+// DeleteExercise removes an existing exercise from the database.
+func (r *exerciseRepo) DeleteExercise(exerciseID int) error {
+	query := `DELETE FROM exercises WHERE exercise_id = $1`
+	
+	result, err := r.db.Exec(query, exerciseID)
+	if err != nil {
+		return fmt.Errorf("error deleting exercise: %v", err)
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error checking delete result: %v", err)
+	}
+	if rows == 0 {
+		return fmt.Errorf("exercise with ID %d not found", exerciseID)
+	}
+	return nil
+}
