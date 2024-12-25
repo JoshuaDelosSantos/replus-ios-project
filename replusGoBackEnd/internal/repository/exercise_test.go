@@ -1,7 +1,6 @@
 package repository
 
 import (
-	// "fmt"
 	"log"
 	"testing"
 	"github.com/stretchr/testify/assert"
