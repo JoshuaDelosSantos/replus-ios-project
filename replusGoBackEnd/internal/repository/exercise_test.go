@@ -87,3 +87,35 @@ func TestGetExercisesBySessionID(t *testing.T) {
 	}
 	assert.Equal(t, expected, exercises)
 }
+
+func TestCreateExercise(t *testing.T) {
+	log.Println("Starting TestCreateExercise...")
+
+	// Initialize mock DB and repository
+	log.Println("Initializing mock DB and repository...")
+	repo, mock := setupMockExerciseDB(t)
+
+	// Set up mock expectations
+	log.Println("Setting up mock expectations...")
+	mock.ExpectQuery(`
+		INSERT INTO exercises \(session_id, exercise_name\)
+		VALUES \(\$1, \$2\)
+		RETURNING exercise_id`).
+		WithArgs(1, "Exercise 1").
+		WillReturnRows(sqlmock.NewRows([]string{"exercise_id"}).
+			AddRow(1))
+
+	log.Println("Mock expectations set up successfully.")
+
+	// Call the method being tested
+	log.Println("Calling the CreateExercise method...")
+	exercise, err := repo.CreateExercise(models.Exercise{SessionID: 1, ExerciseName: "Exercise 1"})
+	assert.NoError(t, err)
+
+	log.Println("CreateExercise method executed successfully.")
+
+	// Verify results
+	log.Println("Verifying results...")
+	expected := models.Exercise{ID: 1, SessionID: 1, ExerciseName: "Exercise 1"}
+	assert.Equal(t, expected, exercise)
+}
