@@ -2,6 +2,7 @@ package repository
 
 import (
 	"log"
+	"fmt"
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"github.com/DATA-DOG/go-sqlmock"
@@ -118,4 +119,71 @@ func TestUpdateExercise(t *testing.T) {
 	assert.NoError(t, mock.ExpectationsWereMet())
 
 	log.Println("TestUpdateExercise completed successfully.")
+}
+
+func TestDeleteExercise(t *testing.T) {
+	log.Println("Starting TestDeleteExercise...")
+
+	// Initialize mock DB and repository
+	log.Println("Initializing mock DB and repository...")
+	repo, mock := setupMockExerciseDB(t)
+
+	// Set up mock expectations for successful delete
+	log.Println("Setting up mock expectations for successful delete...")
+	mock.ExpectExec(`
+		DELETE FROM exercises 
+		WHERE exercise_id = \$1`).
+		WithArgs(1).
+		WillReturnResult(sqlmock.NewResult(0, 1)) // 1 row affected
+
+	log.Println("Mock expectations set up successfully.")
+
+	// Call the method being tested
+	log.Println("Calling the DeleteExercise method for successful delete...")
+	err := repo.DeleteExercise(1)
+	assert.NoError(t, err)
+
+	log.Println("DeleteExercise method executed successfully for successful delete.")
+
+	// Set up mock expectations for non-existent exercise
+	log.Println("Setting up mock expectations for non-existent exercise...")
+	mock.ExpectExec(`
+		DELETE FROM exercises 
+		WHERE exercise_id = \$1`).
+		WithArgs(2).
+		WillReturnResult(sqlmock.NewResult(0, 0)) // 0 rows affected
+
+	log.Println("Mock expectations set up successfully for non-existent exercise.")
+
+	// Call the method being tested
+	log.Println("Calling the DeleteExercise method for non-existent exercise...")
+	err = repo.DeleteExercise(2)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "exercise with ID 2 not found")
+
+	log.Println("DeleteExercise method executed successfully for non-existent exercise.")
+
+	// Set up mock expectations for delete failure
+	log.Println("Setting up mock expectations for delete failure...")
+	mock.ExpectExec(`
+		DELETE FROM exercises 
+		WHERE exercise_id = \$1`).
+		WithArgs(3).
+		WillReturnError(fmt.Errorf("delete failed"))
+
+	log.Println("Mock expectations set up successfully for delete failure.")
+
+	// Call the method being tested
+	log.Println("Calling the DeleteExercise method for delete failure...")
+	err = repo.DeleteExercise(3)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "delete failed")
+
+	log.Println("DeleteExercise method executed successfully for delete failure.")
+
+	// Ensure all mock expectations were met
+	log.Println("Ensuring all mock expectations were met...")
+	assert.NoError(t, mock.ExpectationsWereMet())
+
+	log.Println("TestDeleteExercise completed successfully.")
 }
