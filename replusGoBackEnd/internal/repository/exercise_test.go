@@ -88,8 +88,8 @@ func TestGetExercisesBySessionID(t *testing.T) {
 	assert.Equal(t, expected, exercises)
 }
 
-func TestCreateExercise(t *testing.T) {
-	log.Println("Starting TestCreateExercise...")
+func TestUpdateExercise(t *testing.T) {
+	log.Println("Starting TestUpdateExercise...")
 
 	// Initialize mock DB and repository
 	log.Println("Initializing mock DB and repository...")
@@ -97,25 +97,25 @@ func TestCreateExercise(t *testing.T) {
 
 	// Set up mock expectations
 	log.Println("Setting up mock expectations...")
-	mock.ExpectQuery(`
-		INSERT INTO exercises \(session_id, exercise_name\)
-		VALUES \(\$1, \$2\)
-		RETURNING exercise_id`).
-		WithArgs(1, "Exercise 1").
-		WillReturnRows(sqlmock.NewRows([]string{"exercise_id"}).
-			AddRow(1))
+	mock.ExpectExec(`
+		UPDATE exercises
+		SET exercise_name = \$1
+		WHERE exercise_id = \$2`).
+		WithArgs("Exercise 2", 1).
+		WillReturnResult(sqlmock.NewResult(0, 1)) // 0 for last insert ID, 1 for rows affected
 
 	log.Println("Mock expectations set up successfully.")
 
 	// Call the method being tested
-	log.Println("Calling the CreateExercise method...")
-	exercise, err := repo.CreateExercise(models.Exercise{SessionID: 1, ExerciseName: "Exercise 1"})
+	log.Println("Calling the UpdateExercise method...")
+	err := repo.UpdateExercise(models.Exercise{ID: 1, ExerciseName: "Exercise 2"})
 	assert.NoError(t, err)
 
-	log.Println("CreateExercise method executed successfully.")
+	log.Println("UpdateExercise method executed successfully.")
 
-	// Verify results
-	log.Println("Verifying results...")
-	expected := models.Exercise{ID: 1, SessionID: 1, ExerciseName: "Exercise 1"}
-	assert.Equal(t, expected, exercise)
+	// Ensure all mock expectations were met
+	log.Println("Ensuring all mock expectations were met...")
+	assert.NoError(t, mock.ExpectationsWereMet())
+
+	log.Println("TestUpdateExercise completed successfully.")
 }
