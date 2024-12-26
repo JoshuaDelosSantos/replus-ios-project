@@ -18,3 +18,30 @@ type LineRepository interface {
 type lineRepo struct {
 	db DB
 }
+
+// NewLineRepository creates a new LineRepository instance.
+func NewLineRepository(db DB) LineRepository {
+	return &lineRepo{db: db}
+}
+
+
+func (r *lineRepo) GetLines() ([]models.Line, error) {
+	rows, err := r.db.Query(`
+		SELECT line_id, exercise_id, weight, reps, date 
+		FROM lines`)
+	if err != nil {
+		return nil, fmt.Errorf("error querying lines: %v", err)
+	}
+	defer rows.Close()
+
+	var lines []models.Line
+	for rows.Next() {
+		var line models.Line
+		if err := rows.Scan(&line.ID, &line.ExerciseID, &line.Weight, &line.Reps, &line.Date); err != nil {
+			return nil, fmt.Errorf("error scanning line: %v", err)
+		}
+		lines = append(lines, line)
+	}
+	return lines, nil
+}
+
