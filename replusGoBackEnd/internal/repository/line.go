@@ -65,3 +65,16 @@ func (r *lineRepo) GetLinesByExerciseID(exerciseID int) ([]models.Line, error) {
 	}
 	return lines, nil
 }
+
+func (r *lineRepo) CreateLine(line models.Line) (models.Line, error) {
+	err := r.db.QueryRow(`
+		INSERT INTO lines (exercise_id, weight, reps, date) 
+		VALUES ($1, $2, $3, $4) 
+		RETURNING line_id
+		`, line.ExerciseID, line.Weight, line.Reps, line.Date).
+		Scan(&line.ID)
+	if err != nil {
+		return models.Line{}, fmt.Errorf("error creating line: %v", err)
+	}
+	return line, nil
+}
