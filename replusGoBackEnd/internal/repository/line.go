@@ -45,3 +45,23 @@ func (r *lineRepo) GetLines() ([]models.Line, error) {
 	return lines, nil
 }
 
+func (r *lineRepo) GetLinesByExerciseID(exerciseID int) ([]models.Line, error) {
+	rows, err := r.db.Query(`
+		SELECT line_id, exercise_id, weight, reps, date 
+		FROM lines 
+		WHERE exercise_id = $1`, exerciseID)
+	if err != nil {
+		return nil, fmt.Errorf("error querying lines for exercise %d: %v", exerciseID, err)
+	}
+	defer rows.Close()
+
+	var lines []models.Line
+	for rows.Next() {
+		var line models.Line
+		if err := rows.Scan(&line.ID, &line.ExerciseID, &line.Weight, &line.Reps, &line.Date); err != nil {
+			return nil, fmt.Errorf("error scanning line: %v", err)
+		}
+		lines = append(lines, line)
+	}
+	return lines, nil
+}
