@@ -92,7 +92,7 @@ func (r *lineRepo) UpdateLine(line models.Line) error {
 	
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-			eturn fmt.Errorf("failed to retrieve affected rows: %w", err)
+		return fmt.Errorf("failed to retrieve affected rows: %w", err)
 	}
 	
 	if rowsAffected == 0 {
