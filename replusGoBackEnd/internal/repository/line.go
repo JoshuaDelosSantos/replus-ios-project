@@ -85,19 +85,40 @@ func (r *lineRepo) UpdateLine(line models.Line) error {
 		SET weight = $1, reps = $2, date = $3
 		WHERE line_id = $4`
 	
-		result, err := r.db.Exec(query, line.ExerciseID, line.Weight, line.Reps, line.Date, line.ID)
-		if err != nil {
-			return fmt.Errorf("failed to execute update query: %w", err)
-		}
+	result, err := r.db.Exec(query, line.ExerciseID, line.Weight, line.Reps, line.Date, line.ID)
+	if err != nil {
+		return fmt.Errorf("failed to execute update query: %w", err)
+	}
 	
-		rowsAffected, err := result.RowsAffected()
-		if err != nil {
-			return fmt.Errorf("failed to retrieve affected rows: %w", err)
-		}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+			eturn fmt.Errorf("failed to retrieve affected rows: %w", err)
+	}
 	
-		if rowsAffected == 0 {
-			return fmt.Errorf("no line found with ID %d", line.ID)
-		}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no line found with ID %d", line.ID)
+	}
 	
-		return nil
+	return nil
+}
+func (r *lineRepo) DeleteLine(lineID int) error {
+	query := `
+		DELETE FROM lines
+		WHERE line_id = $1`
+	
+	result, err := r.db.Exec(query, lineID)
+	if err != nil {
+		return fmt.Errorf("failed to execute delete query: %w", err)
+	}
+	
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to retrieve affected rows: %w", err)
+	}
+	
+	if rowsAffected == 0 {
+		return fmt.Errorf("no line found with ID %d", lineID)
+	}
+	
+	return nil
 }
