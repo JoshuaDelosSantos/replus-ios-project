@@ -84,3 +84,37 @@ func TestGetLinesByExerciseID(t *testing.T) {
 	}
 	assert.Equal(t, expected, lines)
 }
+
+func TestCreateLine(t *testing.T) {
+	log.Println("Starting TestCreateLine...")
+
+	// Initialize mock DB and repository
+	log.Println("Initializing mock DB and repository...")
+	repo, mock := setupMockLineDB(t)
+
+	// Parse the date to time.Time
+	date, err := time.Parse("2006-01-02", "2021-09-01")
+	assert.NoError(t, err)
+
+	// Set up mock expectations
+	log.Println("Setting up mock expectations...")
+	mock.ExpectQuery(`
+		INSERT INTO lines \(exercise_id, weight, reps, date\)
+		VALUES \(\$1, \$2, \$3, \$4\)
+		RETURNING line_id
+		`).
+		WithArgs(1, 100.0, 10, date).
+		WillReturnRows(sqlmock.NewRows([]string{"line_id"}).AddRow(1))
+
+	// Call the method being tested
+	log.Println("Calling the CreateLine method...")
+	line, err := repo.CreateLine(models.Line{ExerciseID: 1, Weight: 100.0, Reps: 10, Date: date})
+	assert.NoError(t, err)
+
+	// Verify results
+	log.Println("Verifying results...")
+	expected := models.Line{ID: 1, ExerciseID: 1, Weight: 100.0, Reps: 10, Date: date}
+	assert.Equal(t, expected, line)
+
+	log.Println("TestCreateLine executed successfully.")
+}
