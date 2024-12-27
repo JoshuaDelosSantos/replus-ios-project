@@ -151,3 +151,31 @@ func TestUpdateLine(t *testing.T) {
 
 	log.Println("TestUpdateLine executed successfully.")
 }
+
+func TestDeleteLine(t *testing.T) {
+	log.Println("Starting TestDeleteLine...")
+
+	// Initialize mock DB and repository
+	log.Println("Initializing mock DB and repository...")
+	repo, mock := setupMockLineDB(t)
+
+	// Set up mock expectations
+	log.Println("Setting up mock expectations...")
+	mock.ExpectExec(`
+		DELETE FROM lines
+		WHERE line_id = \$1`).
+		WithArgs(1).
+		WillReturnResult(sqlmock.NewResult(0, 1)) // Simulate one row deleted
+
+	// Call the method being tested
+	log.Println("Calling the DeleteLine method...")
+	err := repo.DeleteLine(1)
+	assert.NoError(t, err)
+
+	// Verify expectations
+	log.Println("Verifying expectations...")
+	err = mock.ExpectationsWereMet()
+	assert.NoError(t, err)
+
+	log.Println("TestDeleteLine executed successfully.")
+}
