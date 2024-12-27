@@ -22,12 +22,11 @@ type DB interface {
 
 ### Repository Interfaces
 
-The UserRepository interface provides methods for managing user-related data. It includes operations for:
-	•	GetUsers: Fetching all users from the database.
-	•	CreateUser: Adding a new user to the database.
-	•	UpdateUser: Updating an existing user’s details.
-	•	DeleteUser: Removing a user from the database by their ID.
-
+The **UserRepository** interface provides methods for managing user-related data. It includes operations for:
+- GetUsers: Fetching all users from the database.
+- CreateUser: Adding a new user to the database.
+- UpdateUser: Updating an existing user’s details.
+- DeleteUser: Removing a user from the database by their I- 
 This interface ensures a standardized approach to user data management.
 ```
 type UserRepository interface {
@@ -38,12 +37,12 @@ type UserRepository interface {
 }
 ```
 
-The SessionRepository interface defines operations for handling session data. It includes methods for:
-	•	GetSessions: Retrieving all sessions.
-	•	CreateSession: Adding a new session to the database.
-	•	GetSessionsByUserID: Fetching sessions associated with a specific user.
-	•	UpdateSession: Modifying details of an existing session.
-	•	DeleteSession: Removing a session from the database by its ID.
+The **SessionRepository** interface defines operations for handling session data. It includes methods for:
+- GetSessions: Retrieving all sessions.
+- CreateSession: Adding a new session to the database.
+- GetSessionsByUserID: Fetching sessions associated with a specific user.
+- UpdateSession: Modifying details of an existing session.
+- DeleteSession: Removing a session from the database by its ID.
 
 This interface organizes the logic for session-related database interactions.
 ```
@@ -56,12 +55,12 @@ type SessionRepository interface {
 }
 ```
 
-The ExerciseRepository interface manages exercise data operations. It includes:
-	•	GetExercises: Retrieving all exercises.
-	•	CreateExercise: Adding a new exercise to the database.
-	•	GetExercisesBySessionID: Fetching exercises associated with a specific session.
-	•	UpdateExercise: Updating details of an existing exercise.
-	•	DeleteExercise: Removing an exercise from the database by its ID.
+The **ExerciseRepository** interface manages exercise data operations. It includes:
+- GetExercises: Retrieving all exercises.
+- CreateExercise: Adding a new exercise to the database.
+- GetExercisesBySessionID: Fetching exercises associated with a specific session.
+- UpdateExercise: Updating details of an existing exercise.
+- DeleteExercise: Removing an exercise from the database by its ID.
 
 This interface simplifies interactions with exercise data.
 ```
@@ -74,12 +73,12 @@ type ExerciseRepository interface {
 }
 ```
 
-The LineRepository interface provides methods for managing line-related data. It includes:
-	•	GetLines: Retrieving all lines from the database.
-	•	CreateLine: Adding a new line to the database.
-	•	GetLinesByExerciseID: Fetching lines associated with a specific exercise.
-	•	UpdateLine: Updating details of an existing line.
-	•	DeleteLine: Removing a line from the database by its ID.
+The **LineRepository** interface provides methods for managing line-related data. It includes:
+- GetLines: Retrieving all lines from the database.
+- CreateLine: Adding a new line to the database.
+- GetLinesByExerciseID: Fetching lines associated with a specific exercise.
+- UpdateLine: Updating details of an existing line.
+- DeleteLine: Removing a line from the database by its ID.
 
 This interface handles line-related database logic consistently.
 ```
