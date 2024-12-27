@@ -85,7 +85,7 @@ func (r *lineRepo) UpdateLine(line models.Line) error {
 		SET weight = $1, reps = $2, date = $3
 		WHERE line_id = $4`
 	
-	result, err := r.db.Exec(query, line.ExerciseID, line.Weight, line.Reps, line.Date, line.ID)
+	result, err := r.db.Exec(query, line.Weight, line.Reps, line.Date, line.ID) // Removed line.ExerciseID
 	if err != nil {
 		return fmt.Errorf("failed to execute update query: %w", err)
 	}
@@ -101,6 +101,7 @@ func (r *lineRepo) UpdateLine(line models.Line) error {
 	
 	return nil
 }
+
 func (r *lineRepo) DeleteLine(lineID int) error {
 	query := `
 		DELETE FROM lines
