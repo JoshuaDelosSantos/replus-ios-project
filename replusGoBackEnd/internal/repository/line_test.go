@@ -118,3 +118,36 @@ func TestCreateLine(t *testing.T) {
 
 	log.Println("TestCreateLine executed successfully.")
 }
+
+func TestUpdateLine(t *testing.T) {
+	log.Println("Starting TestUpdateLine...")
+
+	// Initialize mock DB and repository
+	log.Println("Initializing mock DB and repository...")
+	repo, mock := setupMockLineDB(t)
+
+	// Parse the date to time.Time
+	date, err := time.Parse("2006-01-02", "2021-09-05")
+	assert.NoError(t, err)
+
+	// Set up mock expectations
+	log.Println("Setting up mock expectations...")
+	mock.ExpectExec(`
+		UPDATE lines
+		SET weight = \$1, reps = \$2, date = \$3
+		WHERE line_id = \$4`).
+		WithArgs(150.0, 12, date, 1).
+		WillReturnResult(sqlmock.NewResult(0, 1)) // Simulate one row updated
+
+	// Call the method being tested
+	log.Println("Calling the UpdateLine method...")
+	err = repo.UpdateLine(models.Line{ID: 1, Weight: 150.0, Reps: 12, Date: date})
+	assert.NoError(t, err)
+
+	// Verify expectations
+	log.Println("Verifying expectations...")
+	err = mock.ExpectationsWereMet()
+	assert.NoError(t, err)
+
+	log.Println("TestUpdateLine executed successfully.")
+}
