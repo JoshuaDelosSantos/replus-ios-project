@@ -9,9 +9,7 @@ The DB interface defines a common contract for interacting with the database in 
 - Query: Executes a query that returns multiple rows of data.
 - QueryRow: Executes a query that returns a single row of data.
 - Exec: Executes a query that modifies data or performs other operations without returning rows.
-
 This interface facilitates mocking and testing by allowing database operations to be decoupled from the concrete implementation.
-
 ```
 type DB interface {
     Query(query string, args ...interface{}) (*sql.Rows, error)
@@ -27,7 +25,6 @@ The **UserRepository** interface provides methods for managing user-related data
 - CreateUser: Adding a new user to the database.
 - UpdateUser: Updating an existing user’s details.
 - DeleteUser: Removing a user from the database by their I- 
-This interface ensures a standardized approach to user data management.
 ```
 type UserRepository interface {
     GetUsers() ([]models.User, error)
@@ -43,8 +40,6 @@ The **SessionRepository** interface defines operations for handling session data
 - GetSessionsByUserID: Fetching sessions associated with a specific user.
 - UpdateSession: Modifying details of an existing session.
 - DeleteSession: Removing a session from the database by its ID.
-
-This interface organizes the logic for session-related database interactions.
 ```
 type SessionRepository interface {
     GetSessions() ([]models.Session, error)
@@ -61,8 +56,6 @@ The **ExerciseRepository** interface manages exercise data operations. It includ
 - GetExercisesBySessionID: Fetching exercises associated with a specific session.
 - UpdateExercise: Updating details of an existing exercise.
 - DeleteExercise: Removing an exercise from the database by its ID.
-
-This interface simplifies interactions with exercise data.
 ```
 type ExerciseRepository interface {
     GetExercises() ([]models.Exercise, error)
@@ -79,8 +72,6 @@ The **LineRepository** interface provides methods for managing line-related data
 - GetLinesByExerciseID: Fetching lines associated with a specific exercise.
 - UpdateLine: Updating details of an existing line.
 - DeleteLine: Removing a line from the database by its ID.
-
-This interface handles line-related database logic consistently.
 ```
 type LineRepository interface {
     GetLines() ([]models.Line, error)
