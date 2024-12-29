@@ -24,18 +24,21 @@ func NewJWTValidator(secretKey string) TokenValidator {
 }
 
 func (v *JWTValidator) ValidateToken(tokenString string) (*Claims, error) {
-    validatorLogger.Printf("Validating token: %s...", tokenString[:10])
-
+    // Check for empty token
     if tokenString == "" {
-        return nil, fmt.Errorf("empty token")
+        validatorLogger.Printf("Token is empty")
+        return nil, fmt.Errorf("token is empty")
     }
+
+    // Log part of the token for validation
+    validatorLogger.Printf("Validating token: %s...", tokenString[:10])
 
     // Remove 'Bearer ' prefix if present
     if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
         tokenString = tokenString[7:]
     }
 
-    // Use ValidateTokenWithSecret instead of ValidateToken
+    // Use ValidateTokenWithSecret to validate the token
     claims, err := ValidateTokenWithSecret(tokenString, v.secretKey)
     if err != nil {
         validatorLogger.Printf("Token validation failed: %v", err)
