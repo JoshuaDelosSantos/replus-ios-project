@@ -14,6 +14,7 @@ type Config struct {
     DBPassword string
     DBName     string
     AppPort    string
+    JWT_SECRET string
 }
 
 func LoadConfig() Config {
@@ -29,6 +30,7 @@ func LoadConfig() Config {
         DBPassword: getEnv("DB_PASSWORD", "password"),
         DBName:     getEnv("DB_NAME", "mydb"),
         AppPort:    getEnv("APP_PORT", "8080"),
+        JWT_SECRET: getEnv("JWT_SECRET", "supersecretkey"),
     }
 }
 
