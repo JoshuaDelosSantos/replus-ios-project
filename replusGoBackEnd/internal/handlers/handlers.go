@@ -50,6 +50,18 @@ func Home(w http.ResponseWriter, r *http.Request) {
     })
 }
 
+// Login handles user authentication
+func Login(w http.ResponseWriter, r *http.Request) {
+    // TODO: Implement login logic
+    w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Register handles new user registration
+func Register(w http.ResponseWriter, r *http.Request) {
+    // TODO: Implement registration logic
+    w.WriteHeader(http.StatusNotImplemented)
+}
+
 // GetUsers handles GET requests for users
 func GetUsers(w http.ResponseWriter, r *http.Request) {
     // TODO: Implement user retrieval
