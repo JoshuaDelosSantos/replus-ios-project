@@ -18,7 +18,7 @@ func init() {
 	middlewareLogger = log.New(os.Stdout, "[AUTH_MIDDLEWARE] ", log.LstdFlags|log.Lshortfile)
 }
 
-func AuthMiddleware(next http.Handler) http.Handler {
+func AuthMiddleware(validator TokenValidator, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		middlewareLogger.Printf("Processing request: %s %s", r.Method, r.URL.Path)
 
@@ -31,8 +31,8 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		}
 		middlewareLogger.Println("Token found in request header")
 
-		// Validate token
-		claims, err := ValidateToken(tokenString)
+		// Validate token using the injected validator
+		claims, err := validator.ValidateToken(tokenString)
 		if err != nil {
 			middlewareLogger.Printf("Token validation failed: %v", err)
 			http.Error(w, "Invalid token", http.StatusUnauthorized)
