@@ -7,10 +7,6 @@ import (
 	"os"
 )
 
-type TokenValidator interface {
-	ValidateToken(token string) (*Claims, error)
-}
-
 var middlewareLogger *log.Logger
 
 func init() {
