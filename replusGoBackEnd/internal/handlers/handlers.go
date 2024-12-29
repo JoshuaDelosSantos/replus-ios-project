@@ -85,3 +85,15 @@ func CreateSession(w http.ResponseWriter, r *http.Request) {
     // TODO: Implement session creation
     w.WriteHeader(http.StatusNotImplemented)
 }
+
+// GetExercises handles GET requests for exercises
+func GetExercises(w http.ResponseWriter, r *http.Request) {
+    // TODO: Implement exercise retrieval logic
+    w.WriteHeader(http.StatusNotImplemented)
+}
+
+// CreateExercise handles POST requests for exercises
+func CreateExercise(w http.ResponseWriter, r *http.Request) {
+    // TODO: Implement exercise creation logic
+    w.WriteHeader(http.StatusNotImplemented)
+}
