@@ -9,7 +9,7 @@ import (
 )
 
 type Claims struct {
-	UserID int `json:"userID"`
+	UserID int `json:"user_id"`
 	jwt.RegisteredClaims
 }
 
