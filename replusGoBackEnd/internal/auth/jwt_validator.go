@@ -25,7 +25,7 @@ func NewJWTValidator(secretKey string) TokenValidator {
 
 func (v *JWTValidator) ValidateToken(tokenString string) (*Claims, error) {
     validatorLogger.Printf("Validating token: %s...", tokenString[:10])
-    
+
     if tokenString == "" {
         return nil, fmt.Errorf("empty token")
     }
@@ -35,8 +35,8 @@ func (v *JWTValidator) ValidateToken(tokenString string) (*Claims, error) {
         tokenString = tokenString[7:]
     }
 
-    // Use the existing ValidateToken function from jwt.go
-    claims, err := ValidateToken(tokenString)
+    // Use ValidateTokenWithSecret instead of ValidateToken
+    claims, err := ValidateTokenWithSecret(tokenString, v.secretKey)
     if err != nil {
         validatorLogger.Printf("Token validation failed: %v", err)
         return nil, fmt.Errorf("invalid token: %w", err)
