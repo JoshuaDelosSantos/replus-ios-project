@@ -2,9 +2,8 @@ package auth
 
 import (
 	"errors"
-	"os"
 	"time"
-
+	"os"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -13,14 +12,12 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-// GenerateToken creates a JWT for a given user
-func GenerateToken(userID int) (string, error) {
-	secret := os.Getenv("JWT_SECRET") // Get secret from env
-
+// GenerateTokenWithSecret generates a token using the provided secret key.
+func GenerateTokenWithSecret(userID int, secret string) (string, error) {
 	claims := Claims{
 		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)), // Token valid for 15 mins
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			Issuer:    "replus-ios",
 		},
@@ -30,10 +27,8 @@ func GenerateToken(userID int) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-// ValidateToken verifies and parses a JWT
-func ValidateToken(tokenString string) (*Claims, error) {
-	secret := os.Getenv("JWT_SECRET")
-
+// ValidateTokenWithSecret validates a token using the provided secret key.
+func ValidateTokenWithSecret(tokenString string, secret string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
@@ -51,4 +46,15 @@ func ValidateToken(tokenString string) (*Claims, error) {
 	}
 
 	return claims, nil
+}
+
+// Existing functions now delegate to the above functions.
+func GenerateToken(userID int) (string, error) {
+	secret := os.Getenv("JWT_SECRET")
+	return GenerateTokenWithSecret(userID, secret)
+}
+
+func ValidateToken(tokenString string) (*Claims, error) {
+	secret := os.Getenv("JWT_SECRET")
+	return ValidateTokenWithSecret(tokenString, secret)
 }
