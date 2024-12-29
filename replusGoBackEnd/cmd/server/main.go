@@ -27,7 +27,7 @@ func main() {
     }
     log.Printf("Successfully connected to database at %s:%s", cfg.DBHost, cfg.DBPort)
 
-    r := router.NewRouter()
+    r := router.NewRouter(cfg)
     // Start the HTTP server on the specified port and log any errors
     log.Printf("Starting server on port %s", cfg.AppPort)
     log.Fatal(http.ListenAndServe(":"+cfg.AppPort, r))
