@@ -12,3 +12,11 @@ type TokenValidator interface {
 }
 ```
 
+**2. JWT Claims (jwt.go)**
+Claims struct that defines the token payload:
+```
+type Claims struct {
+    UserID int `json:"user_id"`
+    jwt.RegisteredClaims
+}
+```
