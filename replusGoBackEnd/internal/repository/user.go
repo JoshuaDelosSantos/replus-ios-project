@@ -49,7 +49,7 @@ func (r *userRepo) GetUsers() ([]models.User, error) {
     for rows.Next() {
         var user models.User
         // Scan row values into user struct fields
-        if err := rows.Scan(&user.ID, &user.UserName); err != nil {
+        if err := rows.Scan(&user.ID, &user.UserName, &user.Email); err != nil {
             return nil, fmt.Errorf("error scanning user: %v", err)
         }
         // Append user to slice using built-in append function
