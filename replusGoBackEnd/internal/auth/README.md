@@ -60,7 +60,7 @@ response := map[string]string{"token": token}
 ```
 
 2. Client Makes Requests
-Client includes token in requests:
+Client includes token in requests
 
 3. Middleware Validates Request
 ```
