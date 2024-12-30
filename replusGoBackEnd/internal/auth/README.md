@@ -32,3 +32,13 @@ validator := auth.NewJWTValidator(secretKey)
 // Apply middleware to routes
 router.Use(auth.AuthMiddleware(validator, next))
 ```
+
+**4. JWT Operations (jwt.go)**
+Provdes core JWT functionality:
+```
+// Generate a token
+token, err := GenerateToken(userID)
+
+// Validate a token
+claims, err := ValidateToken(tokenString)
+```
