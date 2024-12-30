@@ -33,7 +33,7 @@ func NewUserRepository(db DB) UserRepository {
 func (r *userRepo) GetUsers() ([]models.User, error) {
     // Execute SQL query and handle potential errors
     rows, err := r.db.Query(`
-        SELECT user_id, user_name 
+        SELECT user_id, user_name, email 
         FROM users
         ORDER BY user_id
         `)
@@ -62,11 +62,11 @@ func (r *userRepo) GetUsers() ([]models.User, error) {
 // Returns the created User model and error if any.
 func (r *userRepo) CreateUser(user models.User) (models.User, error) {
     query := `
-        INSERT INTO users (user_name)
-        VALUES ($1)
+        INSERT INTO users (user_name, email, password)
+        VALUES ($1, $2, $3)
         RETURNING user_id`
     
-    err := r.db.QueryRow(query, user.UserName).Scan(&user.ID)
+    err := r.db.QueryRow(query, user.UserName, user.Email, user.Password).Scan(&user.ID)
     if err != nil {
         return models.User{}, fmt.Errorf("error creating user: %v", err)
     }
@@ -78,10 +78,10 @@ func (r *userRepo) CreateUser(user models.User) (models.User, error) {
 func (r *userRepo) UpdateUser(user models.User) error {
     query := `
         UPDATE users 
-        SET user_name = $1
-        WHERE user_id = $2`
+        SET user_name = $1, email = $2, password = $3
+        WHERE user_id = $4`
     
-    result, err := r.db.Exec(query, user.UserName, user.ID)
+    result, err := r.db.Exec(query, user.UserName, user.Email, user.Password, user.ID)
     if err != nil {
         return fmt.Errorf("error updating user: %v", err)
     }
