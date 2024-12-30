@@ -29,13 +29,13 @@ func TestGetUsers(t *testing.T) {
     // Set up mock expectations
     log.Println("Setting up mock expectations...")
     mock.ExpectQuery(`
-		SELECT user_id, user_name 
+		SELECT user_id, user_name, email
 		FROM users 
 		ORDER BY user_id
 		`).
-        WillReturnRows(sqlmock.NewRows([]string{"user_id", "user_name"}).
-            AddRow(1, "John Doe").
-            AddRow(2, "Jane Smith"))
+        WillReturnRows(sqlmock.NewRows([]string{"user_id", "user_name", "email"}).
+            AddRow(1, "John Doe", "john@doe.com").
+            AddRow(2, "Jane Smith", "jane@smith.com"))
 
     log.Println("Mock expectations set up successfully.")
 
@@ -50,8 +50,8 @@ func TestGetUsers(t *testing.T) {
     log.Println("Verifying results...")
 	log.Println(users)
     expected := []models.User{
-        {ID: 1, UserName: "John Doe"},
-        {ID: 2, UserName: "Jane Smith"},
+        {ID: 1, UserName: "John Doe", Email: "john@doe.com"},
+        {ID: 2, UserName: "Jane Smith", Email: "jane@smith.com"},
     }
     assert.Equal(t, expected, users)
 
