@@ -43,7 +43,7 @@ token, err := GenerateToken(userID)
 claims, err := ValidateToken(tokenString)
 ```
 
-## Workflow
+## Authentication Workflow
 
 1. Token Generation
 When a user logs in:
@@ -84,5 +84,15 @@ func protectedHandler(w http.ResponseWriter, r *http.Request) {
     
     fmt.Printf("Request from user: %d\n", userID)
     // ... handle request
+}
+```
+## Password Management
+Provides secure password hashing and validation using bcrypt (password.go).
+```
+// Hash a new password
+hashedPassword, err := auth.HashPassword("userPassword123")
+if err != nil {
+    log.Printf("Failed to hash password: %v", err)
+    return
 }
 ```
