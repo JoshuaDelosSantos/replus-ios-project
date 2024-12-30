@@ -20,3 +20,15 @@ type Claims struct {
     jwt.RegisteredClaims
 }
 ```
+
+**3. Authentication Middleware (middleware.go)**
+- Extracts JWT tokens from request headers.
+- Validates tokens.
+- Adds user information to request context.
+```
+// Create a validator
+validator := auth.NewJWTValidator(secretKey)
+
+// Apply middleware to routes
+router.Use(auth.AuthMiddleware(validator, next))
+```
