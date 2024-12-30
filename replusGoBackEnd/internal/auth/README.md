@@ -42,3 +42,47 @@ token, err := GenerateToken(userID)
 // Validate a token
 claims, err := ValidateToken(tokenString)
 ```
+
+## Workflow
+
+1. Token Generation
+When a user logs in:
+```
+// Generate a JWT token for the user
+userID := 123 // From your login logic
+token, err := auth.GenerateToken(userID)
+if err != nil {
+    // Handle error
+}
+
+// Return token to client
+response := map[string]string{"token": token}
+```
+
+2. Client Makes Requests
+Client includes token in requests:
+
+3. Middleware Validates Request
+```
+router := mux.NewRouter()
+
+// Create validator with secret
+validator := auth.NewJWTValidator(os.Getenv("JWT_SECRET"))
+
+// Apply middleware to protected routes
+protected := router.PathPrefix("/api").Subrouter()
+protected.Use(func(next http.Handler) http.Handler {
+    return auth.AuthMiddleware(validator, next)
+})
+```
+
+4. Protected Handler Accesses User
+```
+func protectedHandler(w http.ResponseWriter, r *http.Request) {
+    // Get userID from context (set by middleware)
+    userID := r.Context().Value("user_id").(int)
+    
+    fmt.Printf("Request from user: %d\n", userID)
+    // ... handle request
+}
+```
